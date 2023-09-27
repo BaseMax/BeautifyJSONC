@@ -9,4 +9,4 @@ beautify_json:
 
 clean:
 	@echo "[+] Cleaning..."
-	rm -f beaufify_json
+	rm -f beautify_json

@@ -1,33 +1,29 @@
 {
-    "name":"John",
-    "age":30,
-    "city":"New York",
-    "skills":
-    [
+    "name": "John",
+    "age": 30,
+    "city": "New York",
+    "skills": [
         "programming",
         "data analysis",
         "problem-solving"
     ],
-    "address":
-    {
-        "street":"123 Main St",
-        "zipcode":"10001"
+    "address": {
+        "street": "123 Main St",
+        "zipcode": "10001"
     },
-    "work_experience":
-    [
+    "work_experience": [
         {
-            "job_title":"Software Engineer",
-            "company":"TechCo",
-            "duration":"2 years"
+            "job_title": "Software Engineer",
+            "company": "TechCo",
+            "duration": "2 years"
         },
         {
-            "job_title":"Data Analyst",
-            "company":"DataCorp",
-            "duration":"3 years"
+            "job_title": "Data Analyst",
+            "company": "DataCorp",
+            "duration": "3 years"
         }
     ],
-    "interests":
-    [
+    "interests": [
         "reading",
         "music",
         "traveling"

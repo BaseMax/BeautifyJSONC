@@ -13,68 +13,87 @@
 
 #define INDENT_SIZE 4
 
-void beautify_json(FILE *input_file, FILE *output_file) {
-    int indent_level = 0;
-    int inside_string = 0;
-    int c, prev_char = -1;
+void beautifyJson(FILE *inputFile, FILE *outputFile) {
+    int indentLevel = 0;
+    int insideString = 0;
+    int c;
+    int prevChar = -1;
 
-    while ((c = fgetc(input_file)) != EOF){
-        if (c == '"' && prev_char == '\\') {
-            inside_string = !inside_string;
+    while ((c = fgetc(inputFile)) != EOF) {
+        if (c == '"' && prevChar != '\\') {
+            insideString = !insideString;
         }
-        if (!inside_string) {
+
+        if (!insideString) {
             if (c == '{' || c == '[') {
-                fputc(c, output_file);
-                fputc('\n', output_file);
-                indent_level++;
-                for (int j = 0; j < indent_level * INDENT_SIZE; j++) {
-                    fputc(' ', output_file);
+                if (prevChar != ',' && prevChar != '{' && prevChar != '[') {
+                    fputc('\n', outputFile);
+                    for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
+                        fputc(' ', outputFile);
+                    }
+                }
+                fputc(c, outputFile);
+                fputc('\n', outputFile);
+                indentLevel++;
+                for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
+                    fputc(' ', outputFile);
                 }
             } else if (c == '}' || c == ']') {
-                fputc('\n', output_file);
-                indent_level--;
-                for (int j = 0; j < indent_level * INDENT_SIZE; j++) {
-                    fputc(' ', output_file);
+                indentLevel--;
+                if (prevChar != ',' && prevChar != '{' && prevChar != '[') {
+                    fputc('\n', outputFile);
+                    for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
+                        fputc(' ', outputFile);
+                    }
                 }
-                fputc(c, output_file);
+                fputc(c, outputFile);
             } else if (c == ',') {
-                fputc(c, output_file);
-                fputc('\n', output_file);
-                for(int j = 0; j < indent_level * INDENT_SIZE; j++) {
-                    fputc(' ', output_file);
+                fputc(c, outputFile);
+                if (prevChar != '{' && prevChar != '[') {
+                    fputc('\n', outputFile);
+                    for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
+                        fputc(' ', outputFile);
+                    }
                 }
             } else {
-                fputc(c, output_file);
+                fputc(c, outputFile);
             }
         } else {
-            fputc(c, output_file);
+            if (c == '\n' || c == '\r') {
+                fputc(' ', outputFile);
+            } else {
+                fputc(c, outputFile);
+            }
         }
+
+        prevChar = c;
     }
 }
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Usage: %s <input_file> <output_file>\n", argv[0]);
-        return EXIT_FAILURE;
+        printf("Usage: %s input_file output_file\n", argv[0]);
+        return 1;
     }
 
-    FILE *input_file = fopen(argv[1], "r");
-    if (input_file == NULL) {
+    FILE *inputFile = fopen(argv[1], "r");
+    if (inputFile == NULL) {
         perror("Error opening input file");
-        return EXIT_FAILURE;
+        return 1;
     }
 
-    FILE *output_file = fopen(argv[2], "w");
-    if (output_file == NULL) {
+    FILE *outputFile = fopen(argv[2], "w");
+    if (outputFile == NULL) {
         perror("Error opening output file");
-        fclose(input_file);
-        return EXIT_FAILURE;
+        fclose(inputFile);
+        return 1;
     }
 
-    beautify_json(input_file, output_file);
+    beautifyJson(inputFile, outputFile);
 
-    fclose(input_file);
-    fclose(output_file);
+    fclose(inputFile);
+    fclose(outputFile);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
+

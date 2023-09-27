@@ -18,6 +18,7 @@ void beautifyJson(FILE *inputFile, FILE *outputFile) {
     int insideString = 0;
     int c;
     int prevChar = -1;
+    int prevNonSpaceChar = -1;
 
     while ((c = fgetc(inputFile)) != EOF) {
         if (c == '"' && prevChar != '\\') {
@@ -27,7 +28,9 @@ void beautifyJson(FILE *inputFile, FILE *outputFile) {
         if (!insideString) {
             if (c == '{' || c == '[') {
                 if (prevChar != ',' && prevChar != '{' && prevChar != '[') {
-                    fputc('\n', outputFile);
+                    if (prevNonSpaceChar != -1 && prevNonSpaceChar != '\n') {
+                        fputc('\n', outputFile);
+                    }
                     for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
                         fputc(' ', outputFile);
                     }
@@ -41,7 +44,9 @@ void beautifyJson(FILE *inputFile, FILE *outputFile) {
             } else if (c == '}' || c == ']') {
                 indentLevel--;
                 if (prevChar != ',' && prevChar != '{' && prevChar != '[') {
-                    fputc('\n', outputFile);
+                    if (prevNonSpaceChar != -1 && prevNonSpaceChar != '\n') {
+                        fputc('\n', outputFile);
+                    }
                     for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
                         fputc(' ', outputFile);
                     }
@@ -50,22 +55,23 @@ void beautifyJson(FILE *inputFile, FILE *outputFile) {
             } else if (c == ',') {
                 fputc(c, outputFile);
                 if (prevChar != '{' && prevChar != '[') {
-                    fputc('\n', outputFile);
+                    if (prevNonSpaceChar != -1 && prevNonSpaceChar != '\n') {
+                        fputc('\n', outputFile);
+                    }
                     for (int j = 0; j < indentLevel * INDENT_SIZE; j++) {
                         fputc(' ', outputFile);
                     }
                 }
-            } else {
+            } else if (c != ' ') {
                 fputc(c, outputFile);
             }
         } else {
-            if (c == '\n' || c == '\r') {
-                fputc(' ', outputFile);
-            } else {
-                fputc(c, outputFile);
-            }
+            fputc(c, outputFile);
         }
 
+        if (c != ' ') {
+            prevNonSpaceChar = c;
+        }
         prevChar = c;
     }
 }

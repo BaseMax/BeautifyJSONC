@@ -1,0 +1,12 @@
+COMPILER = cc
+CFLAGS = -O2 -g -Wall -Werror
+
+all: beautify_json
+
+beautify_json:
+	@echo "[+] Building project..."
+	$(COMPILER) $(CFLAGS) -o beautify_json ./src/beautify_json.c
+
+clean:
+	@echo "[+] Cleaning..."
+	rm -f beaufify_json

@@ -1,4 +1,3 @@
-
 # JSON Beautifier
 
 JSON Beautifier is a simple C program that takes a minified JSON file as input and formats it to produce a more readable JSON file as output. This tool can be handy when you have compressed JSON data and want to make it more human-readable.
@@ -18,3 +17,5 @@ To beautify a JSON file, you can use the following command:
 ```bash
 ./beautify_json input.json output.json
 ```
+
+Copyright 2023, Max Base
